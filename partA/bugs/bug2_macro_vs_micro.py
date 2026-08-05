@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""
+bug2_macro_vs_micro.py -- isolate the effect of averaging *per-line ratios*
+(fertility.py's `sum(per_line_fertility) / n`, a macro-average that weights
+every line equally regardless of length) vs. the micro-average
+(`total_tokens / total_words`, which weights every word equally).
+
+Uses `line.split()` (not `split(" ")`) for word-counting in both cases, so
+this experiment isolates ONLY the averaging-method effect and doesn't
+conflate it with bug 1.
+"""
+
+import glob
+import os
+import tiktoken
+
+enc = tiktoken.get_encoding("gpt2")
+
+
+def read_lines(path):
+    with open(path, encoding="utf-8") as f:
+        return [ln.strip() for ln in f if ln.strip()]
+
+
+def macro_and_micro(lines):
+    per_line_ratios = []
+    total_tokens = 0
+    total_words = 0
+    for line in lines:
+        line = line.lower()
+        tokens = enc.encode(line)
+        words = line.split()
+        per_line_ratios.append(len(tokens) / len(words))
+        total_tokens += len(tokens)
+        total_words += len(words)
+    macro = sum(per_line_ratios) / len(per_line_ratios)
+    micro = total_tokens / total_words
+    return macro, micro
+
+
+def main():
+    here = os.path.dirname(__file__)
+    corpus_dir = os.path.join(here, "..", "corpus", "flores200")
+    files = sorted(glob.glob(os.path.join(corpus_dir, "*.txt")))
+    if not files:
+        print("(FLORES corpus not found -- run partA/corpus/build_corpus.py first)")
+        return
+
+    print(f"{'lang':<6}{'macro (per-line mean)':>24}{'micro (total/total)':>22}{'delta':>10}{'delta %':>10}")
+    for path in files:
+        lang = os.path.splitext(os.path.basename(path))[0]
+        lines = read_lines(path)
+        macro, micro = macro_and_micro(lines)
+        delta = macro - micro
+        pct = 100 * delta / micro
+        print(f"{lang:<6}{macro:>24.4f}{micro:>22.4f}{delta:>+10.4f}{pct:>+9.2f}%")
+
+
+if __name__ == "__main__":
+    main()

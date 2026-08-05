@@ -1,0 +1,16 @@
+Step 1: grep the original script for every use of `random`
+  line 21: import random
+  line 25: random.seed(1337)  # reproducibility
+
+  -> 2 lines mention `random`; 0 of those call anything on `random` other than .seed(...)
+
+Step 2: run original vs. a copy with the seed line deleted, diff output
+  original stdout length: 244 chars
+  patched  stdout length: 244 chars
+  byte-for-byte identical: True
+
+Conclusion: removing `random.seed(1337)` changes NOTHING about the
+output. Combined with step 1 (random is imported and seeded but never
+otherwise called), this confirms the seed line is inert -- suspicious-
+looking, but not a bug. (It IS dead code / a red herring for a reader
+auditing the script, which is presumably the point.)

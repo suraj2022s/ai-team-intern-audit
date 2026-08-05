@@ -1,0 +1,11 @@
+lang     fert (lowercased)    fert (as-is)     delta   delta %
+eng                 1.2782          1.2348   +0.0434    +3.51%
+hin                 7.8179          7.8176   +0.0003    +0.00%
+kan                22.8216         22.8202   +0.0014    +0.01%
+mal                27.4619         27.4612   +0.0007    +0.00%
+tam                25.0492         25.0478   +0.0014    +0.01%
+tel                20.7145         20.7086   +0.0059    +0.03%
+
+hin/eng fertility ratio WITH lowercasing:    6.116x
+hin/eng fertility ratio WITHOUT lowercasing: 6.331x
+How much of the reported multiplier is attributable to lowercasing: -0.215x (-3.39%)

@@ -1,0 +1,24 @@
+======================================================================
+PART 1: exact lines that trigger the bug (original sample corpus)
+======================================================================
+
+[eng] line: 'Please keep the books  in the cupboard.'
+  split(" ") -> 8 words ['Please', 'keep', 'the', 'books', '', 'in', 'the', 'cupboard.']
+  split()    -> 7 words ['Please', 'keep', 'the', 'books', 'in', 'the', 'cupboard.']
+  tokens=10  fertility(bug)=1.2500  fertility(fix)=1.4286  delta=-0.1786
+
+[hin] line: 'किताबें  अलमारी में रखी हैं।'
+  split(" ") -> 6 words ['किताबें', '', 'अलमारी', 'में', 'रखी', 'हैं।']
+  split()    -> 5 words ['किताबें', 'अलमारी', 'में', 'रखी', 'हैं।']
+  tokens=45  fertility(bug)=7.5000  fertility(fix)=9.0000  delta=-1.5000
+
+======================================================================
+PART 2: aggregate effect on FLORES-200 devtest corpus (A1, 1012 lines/lang)
+======================================================================
+lang    lines w/ multi-space   fert split(" ")    fert split()     delta
+eng                        0            1.2874          1.2874   +0.0000
+hin                        6            7.8564          7.8582   -0.0018
+kan                      208           22.5723         23.0217   -0.4495
+mal                       54           27.5852         27.6901   -0.1049
+tam                       75           25.1273         25.2525   -0.1253
+tel                      136           20.5662         20.8304   -0.2642

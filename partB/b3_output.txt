@@ -1,0 +1,32 @@
+Row under test: batch=24, prompt_len=3584, gen_len=512
+  wall_clock_s=61.16, reported_tok_s=1607.4, itl_ms_p50=96.07
+
+Step 1: what column is REPORT_v0 actually reading?
+  hypothesis: reported_tok_s = num_requests x (prompt_len + gen_len) / wall_clock_s
+            = 24 x (3584 + 512) / 61.16
+            = 1607.3
+  logged reported_tok_s      = 1607.4
+  match: YES -- reported_tok_s counts one-shot PREFILL tokens as if they were streamed decode throughput
+
+Step 2: honest decode goodput, way 1 -- generated tokens only, over wall clock
+  = num_requests x gen_len / wall_clock_s
+  = 24 x 512 / 61.16
+  = 200.9 tok/s
+
+Step 3: honest decode goodput, way 2 -- independent, from per-token decode latency
+  = batch_size x (1000 / itl_ms_p50)
+  = 24 x (1000 / 96.07)
+  = 249.8 tok/s
+
+Both independent derivations land in the same ballpark: 200.9 vs 249.8 tok/s
+(vs. the reported 1607.4 tok/s -- an overstatement of 8.0x-6.4x)
+
+Step 4: what happens if you naively extrapolate the misread column to batch=48?
+  REPORT_v0 extrapolation: ~1600 tok/s (batch 24 reported) x 2 (batch doubles) = ~3200 tok/s
+  actual logged reported_tok_s at batch=48: 1298.5  (LOWER than batch 24, not higher)
+  actual honest goodput at batch=48:
+    way 1 (tokens/wall_clock): 162.3 tok/s
+    way 2 (batch x 1000/itl):  480.0 tok/s
+  -> both are LOWER than batch=24's honest goodput (200.9/249.8), confirming the
+     batch-48 ~3200 tok/s extrapolation is wrong twice over: wrong metric, and wrong direction
+     (past the B1/B2 KV-cache capacity ceiling, real goodput falls, not doubles).

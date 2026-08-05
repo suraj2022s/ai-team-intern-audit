@@ -1,0 +1,59 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading tokenizers (gpt2, MuRIL, NLLB-200)...
+
+Encoding with gpt2...
+  eng: tok/word=1.235  tok/byte=0.2047  tok/grapheme=0.205  tok/sentence=26.72
+  hin: tok/word=7.818  tok/byte=0.5947  tok/grapheme=2.332  tok/sentence=198.09
+  kan: tok/word=22.820  tok/byte=0.9788  tok/grapheme=4.066  tok/sentence=363.05
+  mal: tok/word=27.461  tok/byte=0.9957  tok/grapheme=5.162  tok/sentence=405.13
+  tam: tok/word=25.048  tok/byte=0.9965  tok/grapheme=4.213  tok/sentence=415.19
+  tel: tok/word=20.709  tok/byte=0.9918  tok/grapheme=4.581  tok/sentence=346.60
+
+Encoding with muril...
+  eng: tok/word=1.259  tok/byte=0.2088  tok/grapheme=0.209  tok/sentence=27.25
+  hin: tok/word=1.247  tok/byte=0.0949  tok/grapheme=0.372  tok/sentence=31.60
+  kan: tok/word=1.826  tok/byte=0.0783  tok/grapheme=0.325  tok/sentence=29.06
+  mal: tok/word=2.188  tok/byte=0.0793  tok/grapheme=0.411  tok/sentence=32.28
+  tam: tok/word=1.741  tok/byte=0.0693  tok/grapheme=0.293  tok/sentence=28.86
+  tel: tok/word=1.959  tok/byte=0.0938  tok/grapheme=0.433  tok/sentence=32.79
+
+Encoding with nllb-200-distilled-600M...
+  eng: tok/word=1.399  tok/byte=0.2320  tok/grapheme=0.232  tok/sentence=30.28
+  hin: tok/word=1.448  tok/byte=0.1102  tok/grapheme=0.432  tok/sentence=36.70
+  kan: tok/word=2.594  tok/byte=0.1112  tok/grapheme=0.462  tok/sentence=41.26
+  mal: tok/word=3.061  tok/byte=0.1110  tok/grapheme=0.575  tok/sentence=45.17
+  tam: tok/word=2.587  tok/byte=0.1029  tok/grapheme=0.435  tok/sentence=42.88
+  tel: tok/word=2.400  tok/byte=0.1149  tok/grapheme=0.531  tok/sentence=40.17
+
+Wrote C:\Users\USER\Downloads\falm ai\your-submission\partA\results\a3_full_table.csv
+
+==============================================================================
+SUMMARY: ratio to eng, per tokenizer x denominator
+==============================================================================
+
+-- gpt2 --
+lang        tok_per_word      tok_per_byte  tok_per_grapheme  tok_per_sentence
+eng                1.000             1.000             1.000             1.000
+hin                6.331             2.905            11.380             7.413
+kan               18.480             4.781            19.838            13.585
+mal               22.239             4.864            25.188            15.160
+tam               20.284             4.868            20.560            15.537
+tel               16.770             4.844            22.354            12.970
+
+-- muril --
+lang        tok_per_word      tok_per_byte  tok_per_grapheme  tok_per_sentence
+eng                1.000             1.000             1.000             1.000
+hin                0.990             0.454             1.780             1.160
+kan                1.450             0.375             1.557             1.066
+mal                1.737             0.380             1.968             1.184
+tam                1.383             0.332             1.401             1.059
+tel                1.556             0.449             2.074             1.203
+
+-- nllb-200-distilled-600M --
+lang        tok_per_word      tok_per_byte  tok_per_grapheme  tok_per_sentence
+eng                1.000             1.000             1.000             1.000
+hin                1.035             0.475             1.861             1.212
+kan                1.854             0.480             1.990             1.363
+mal                2.188             0.479             2.478             1.492
+tam                1.849             0.444             1.874             1.416
+tel                1.715             0.495             2.286             1.327

@@ -1,0 +1,44 @@
+(a) KV-cache bytes per token
+    = 2 (K,V) x layers(28) x kv_heads(8) x head_dim(128) x bytes/param(2)
+    = 2 x 28 x 8 x 128 x 2
+    = 114,688 bytes/token  (~112.0 KiB/token)
+
+(b) Max concurrent 4096-token sequences
+    total GPU memory budget   = 24 GB x 0.92 util = 22.080 GB
+    - model weights           = 4.20e+09 params x 2 bytes = 8.400 GB
+      (NOT called out separately in model_spec.md's overhead line, but weights
+       obviously occupy GPU memory too -- omitting this would overstate capacity)
+    - non-KV runtime overhead = 1.600 GB
+    = usable KV-cache memory  = 12.080 GB
+    max_seqs = usable_KV_mem / (bytes/token x 4096)
+             = 12.080e9 / (114688 x 4096)
+             = 25.72  -> ~25 concurrent full-length (4096-token) sequences
+
+(c) Check against bench_log.csv
+     batch  prompt_len  gen_len total_ctx  preempted_seqs  kv_cache_util
+         1         512      256       768               0           0.01
+         2         512      256       768               0           0.01
+         4         512      256       768               0           0.03
+         8         512      256       768               0           0.06
+        16         512      256       768               0           0.12
+        32         512      256       768               0           0.23
+        64         512      256       768               0           0.47
+         4        3584      512      4096               0           0.16
+         8        3584      512      4096               0           0.31
+        16        3584      512      4096               0           0.62
+        24        3584      512      4096               0           0.93
+        32        3584      512      4096               7           0.97
+        48        3584      512      4096              23           0.97
+
+    Predicted ceiling: ~25 concurrent 4096-token sequences.
+    In the log, rows with prompt_len=3584 + gen_len=512 = 4096 total context:
+      batch=24: preempted_seqs=0, kv_cache_util=0.93  (fits cleanly)
+      batch=32: preempted_seqs=7, kv_cache_util=0.97  (scheduler starts preempting)
+    -> the predicted ceiling (25) should fall between 24 and 32 if the
+       arithmetic is right. MATCH
+
+(d) Tighter check: predict kv_cache_util directly for the batch=24 row
+    24 sequences x 4096 tokens x 114688 bytes/token = 11.274 GB used
+    predicted kv_cache_util = 11.274 / 12.080 = 0.933
+    logged kv_cache_util at batch=24, prompt=3584            = 0.93
+    -> predicted 0.93 vs logged 0.93: MATCH (independently confirms both the bytes/token formula AND the usable-memory accounting)

@@ -1,0 +1,32 @@
+Step 1: does whitespace word-count stay constant across a parallel corpus
+(same meaning, same sentence, different language)?
+
+lang   sentences  total words  avg words/sent
+eng         1012        21901           21.64
+hin         1012        25643           25.34
+kan         1012        16100           15.91
+mal         1012        14930           14.75
+tam         1012        16775           16.58
+tel         1012        16938           16.74
+
+words/sentence relative to eng (should be ~1.0x if 'word' were a
+language-neutral unit of meaning -- it is not):
+  eng: 1.00x eng's words/sentence
+  hin: 1.17x eng's words/sentence
+  kan: 0.74x eng's words/sentence
+  mal: 0.68x eng's words/sentence
+  tam: 0.77x eng's words/sentence
+  tel: 0.77x eng's words/sentence
+
+Step 2: headline hin/eng multiplier under three denominators
+(all use the SAME tokenizer, gpt2, and the SAME 1012 parallel sentences)
+
+metric                             eng       hin   hin/eng ratio
+tokens / word                    1.235     7.818           6.331
+tokens / parallel sentence       26.72    198.09           7.413
+
+Interpretation: tokens/sentence holds MEANING constant (parallel corpus,
+same content per line). tokens/word does not -- it also bakes in how many
+whitespace units hin happens to use to express the same content as eng.
+If these two ratios disagreed by a lot, that gap IS the size of the
+distortion introduced by using 'word' as the unit.
