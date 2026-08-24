@@ -159,25 +159,6 @@ faithful to what the report actually computed. hin/eng ratio switching only
 the denominator to UTF-8 bytes: **2.655x**. Same pattern holds at FLORES
 scale: 7.144x (`len()`) vs 2.781x (bytes).
 
-**Macro vs. micro, shown separately so the two bugs aren't conflated**:
-`tok_per_char` here uses macro-averaging (mean of per-line ratios), matching
-`fertility.py`'s actual method — deliberately, so the "before" number
-reproduces REPORT_v0's exact baseline. The script also computes the
-micro-averaged (sum/sum) version of every cell, isolating each fix's own
-contribution one variable at a time:
-
-| corpus | macro→micro alone (averaging fix) | macro-char→macro-byte alone (byte fix) |
-|---|---|---|
-| corpus_sample | 6.998x → 7.162x (+2.34%) | 6.998x → 2.655x (−62.07%) |
-| FLORES-200 | 7.144x → 7.212x (+0.95%) | 7.144x → 2.781x (−61.07%) |
-
-The averaging bug alone moves the ratio by ~1-2% — consistent with bug 2's
-own FLORES-scale measurement (+0.5-0.9%) and nowhere near sufficient to
-explain REPORT_v0's number. The byte fix alone accounts for essentially the
-entire swing. This is the clean version of "none of bugs 1-3 explain the
-headline, bug 4 does" — computed directly, not just asserted from separate
-scripts.
-
 **Why the delta proves the claim**: holding tokenizer, text, and
 preprocessing fixed and changing only how `chars` is counted moves the
 hin/eng ratio from ~7.0x to ~2.7x — a >2.5x swing, entirely attributable to
