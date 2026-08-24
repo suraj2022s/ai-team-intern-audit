@@ -5,6 +5,12 @@ suspicious but is fine." Every claim ships with the exact command, the
 before/after numbers, and one sentence on why the delta proves the claim.
 Raw output for each experiment is in `partA/results/`.
 
+**Baseline**: `python partA/original/fertility.py --corpus eng=partA/original/corpus_sample/eng_sample.txt --corpus hin=partA/original/corpus_sample/hin_sample.txt --tokenizer gpt2`
+(unmodified script, raw output in `partA/results/original_fertility_output.txt`)
+reproduces REPORT_v0's exact numbers — eng 1.27/0.226, hin 7.45/1.579,
+"5.89x" — confirming everything below audits the actual script's actual
+output, not a transcription of the report.
+
 ## 1. Bug — phantom word from `line.split(" ")`
 
 **Claim**: `words = line.split(" ")` (fertility.py:62) splits on a literal

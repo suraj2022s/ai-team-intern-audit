@@ -51,6 +51,19 @@ across all 6 files — all describe the same "diabetic mice" quote). A1 done:
 
 ## A2 — Auditing fertility.py
 
+**Gap caught late**: Part B saves the actual stdout of every script it
+runs (`b1_output.txt`, `b3_output.txt`), but Part A never saved the output
+of running the *original, unmodified* `fertility.py` on the sample
+corpus — every bug-isolation script's output was saved, but not the
+baseline they're all isolating a variable from. Ran it:
+`python partA/original/fertility.py --corpus eng=... --corpus hin=... --tokenizer gpt2`
+→ eng 1.27/0.226, hin 7.45/1.579, "5.89x" — an exact match to REPORT_v0's
+claimed table. Saved as `partA/results/original_fertility_output.txt` and
+referenced at the top of `A2_audit.md`. Small gap, but worth closing:
+without it, the audit's starting point was implicitly "trust REPORT_v0's
+transcription of its own numbers," which is exactly the kind of unverified
+assumption the evidence rule exists to catch, even about the report itself.
+
 Read the script line by line looking for: code bugs, one conceptual
 "computes the wrong thing" flaw, and one "looks suspicious but is fine" red
 herring. Candidates identified on first pass, to be tested one at a time
