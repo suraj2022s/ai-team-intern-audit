@@ -297,6 +297,22 @@ instead of five. Net effect on the document: no bugs deleted, one bug
 its own isolated script and results file, matching the rigor of bugs 1-3
 instead of leaning on an adjacent experiment.
 
+**Revision #3, prompted by a question about the averaging method**: `bug4`'s
+`tok_per_char` was macro-averaged (mean of per-line ratios), same method as
+`fertility.py` itself — deliberate, so the "before" number reproduces
+REPORT_v0's exact baseline, but that also meant the script silently
+conflated two different bugs (char-vs-byte, and macro-vs-micro) without
+ever showing them apart. Added `tok_per_char_micro` alongside the existing
+macro version, computed for both char and byte, and printed all four
+combinations plus an explicit "isolate one variable at a time" breakdown.
+Result: macro/micro alone moves the ratio +2.34%/+0.95% (corpus_sample/
+FLORES) — consistent with bug 2's own measurement, confirming nothing new
+— while the char/byte fix alone accounts for −62.07%/−61.07%, essentially
+the whole swing. Good outcome (nothing changes about which bug matters),
+but the isolation is now shown directly in one script's output instead of
+requiring the reader to mentally combine bug 2's and bug 4's separate
+results and trust that they don't interact.
+
 ## B1 — KV-cache capacity (`partB/b1_kv_cache_capacity.py`)
 
 Arithmetic: 2(K,V) x 28 layers x 8 KV-heads x 128 head_dim x 2 bytes(fp16)

@@ -3,24 +3,36 @@ FORMULA:
   tok/byte (fix)               = tokens / len(line.encode('utf-8'))  -- actual bytes
 
 -- REPORT_v0's exact corpus_sample (10 lines/lang) --
-lang    tok/char (len)   tok/byte (utf8)  avg bytes/char
-eng              0.226             0.226           1.000
-hin              1.579             0.599           2.634
+lang    char,macro  char,micro  byte,macro  byte,micro  bytes/char
+eng          0.226       0.221       0.226       0.221       1.000
+hin          1.579       1.583       0.599       0.601       2.634
 
-hin/eng ratio using tok/char (len()):         6.998x
-hin/eng ratio using tok/byte (utf-8 encode):  2.655x
+hin/eng ratio -- char, macro (fertility.py's actual method): 6.998x
+hin/eng ratio -- char, micro (averaging fix only): 7.162x
+hin/eng ratio -- byte, macro (byte fix only): 2.655x
+hin/eng ratio -- byte, micro (both fixes): 2.719x
 REPORT_v0 claimed (corpus_sample, gpt2): 1.579 / 0.226 = 7.0x worse per character
+
+Isolating each fix's own contribution to the hin/eng ratio, one variable at a time:
+  macro/micro alone (char,macro -> char,micro): 6.998x -> 7.162x (+2.34%) -- small
+  char/byte alone   (char,macro -> byte,macro): 6.998x -> 2.655x (-62.07%) -- this is the real driver
 
 -- FLORES-200 devtest (1012 lines/lang) --
-lang    tok/char (len)   tok/byte (utf8)  avg bytes/char
-eng              0.214             0.214           1.001
-hin              1.529             0.595           2.572
-kan              2.660             0.979           2.719
-mal              2.743             0.995           2.757
-tam              2.724             0.996           2.736
-tel              2.645             0.991           2.670
+lang    char,macro  char,micro  byte,macro  byte,micro  bytes/char
+eng          0.214       0.212       0.214       0.212       1.001
+hin          1.529       1.530       0.595       0.595       2.572
+kan          2.660       2.662       0.979       0.979       2.719
+mal          2.743       2.746       0.995       0.996       2.757
+tam          2.724       2.726       0.996       0.997       2.736
+tel          2.645       2.649       0.991       0.992       2.670
 
-hin/eng ratio using tok/char (len()):         7.144x
-hin/eng ratio using tok/byte (utf-8 encode):  2.781x
+hin/eng ratio -- char, macro (fertility.py's actual method): 7.144x
+hin/eng ratio -- char, micro (averaging fix only): 7.212x
+hin/eng ratio -- byte, macro (byte fix only): 2.781x
+hin/eng ratio -- byte, micro (both fixes): 2.807x
 REPORT_v0 claimed (corpus_sample, gpt2): 1.579 / 0.226 = 7.0x worse per character
+
+Isolating each fix's own contribution to the hin/eng ratio, one variable at a time:
+  macro/micro alone (char,macro -> char,micro): 7.144x -> 7.212x (+0.95%) -- small
+  char/byte alone   (char,macro -> byte,macro): 7.144x -> 2.781x (-61.07%) -- this is the real driver
 
