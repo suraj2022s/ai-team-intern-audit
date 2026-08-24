@@ -64,6 +64,13 @@ without it, the audit's starting point was implicitly "trust REPORT_v0's
 transcription of its own numbers," which is exactly the kind of unverified
 assumption the evidence rule exists to catch, even about the report itself.
 
+**Naming cleanup**: renamed all seven `partA/results/*.txt` files to end in
+`_output.txt` (`bug1_double_space_output.txt`, `corrected_analysis_output.txt`,
+etc.), matching the convention already used in Part B
+(`b1_output.txt`/`b3_output.txt`) and in the new `original_fertility_output.txt`.
+No content changed, just naming — checked first that nothing referenced the
+old names except one line in `A3_corrected_analysis.md` (fixed).
+
 Read the script line by line looking for: code bugs, one conceptual
 "computes the wrong thing" flaw, and one "looks suspicious but is fine" red
 herring. Candidates identified on first pass, to be tested one at a time

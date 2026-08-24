@@ -1,7 +1,8 @@
 # A3 — Corrected cross-language analysis
 
 **Command**: `python partA/corrected_analysis.py` (full output:
-`partA/results/a3_run_log.txt`, raw numbers: `partA/results/a3_full_table.csv`)
+`partA/results/corrected_analysis_output.txt`, raw numbers:
+`partA/results/a3_full_table.csv`)
 
 **Setup**: A1's FLORES-200 devtest corpus (1012 parallel sentences x 6
 languages), 3 tokenizers, 4 denominators, bugs 1-3 from A2 fixed
