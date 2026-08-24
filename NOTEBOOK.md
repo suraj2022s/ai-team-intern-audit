@@ -130,6 +130,19 @@ as a methodology critique, but small in magnitude (<1%) at FLORES scale —
 nowhere near enough to explain the report's ×5.89 headline number by
 itself. Filing this as "real but minor," same category as bug 1.
 
+**Follow-up, caught much later**: unlike bugs 1 and 4, this script only
+ever ran against FLORES, never against the original corpus_sample — a real
+inconsistency across A2's six items, not just a style choice. Reasoned
+that macro-vs-micro is a statistical property of line-length variance and
+assumed a 10-line sample would be too small to show it reliably, but
+"assumed" isn't "checked," and the evidence rule doesn't grant exceptions
+for reasoning that sounds right. Added a Part 1 (corpus_sample) / Part 2
+(FLORES) split to the script, same pattern as bug 1. Result: the sample
+*does* show the same direction and a comparable magnitude (eng +1.09% vs
++0.72%, hin +0.98% vs +0.51%) — larger, as expected from a noisier n=10
+estimate, but not contradicting or undermining the FLORES-scale finding.
+Good outcome, but the point is it needed checking, not assuming.
+
 ### Bug 3: lowercasing (`partA/bugs/bug3_lowercasing.py`)
 
 Confirmed the asymmetry mechanism, but the *direction* surprised me — I'd
@@ -144,6 +157,16 @@ lowercasing throws those away and falls back to more, smaller sub-word
 tokens. Net effect on the headline ratio: hin/eng fertility is 6.331x
 without lowercasing vs. 6.116x with it — so this preprocessing choice
 actually *shrinks* the reported multiplier by about 3.4%, not inflates it.
+**Follow-up, same pass as bug 2 above**: added the corpus_sample Part 1
+here too, for consistency. Unlike bug 2, this one held up almost exactly
+at n=10 (eng +3.12% vs FLORES's +3.51%, hin +0.00% both times, ratio
+shrinks −3.03% vs −3.39%) — makes sense in hindsight: lowercasing hitting a
+specific BPE merge is a deterministic property of specific words, not an
+average over many lines, so it doesn't need scale to show up the way bug
+2's line-length-variance effect does. Worth noting *why* the two bugs
+behaved differently under the same fix, not just that both now have both
+corpora checked.
+
 Good reminder that "this looks like it'd bias things" needs to be checked,
 not assumed — the mechanism (asymmetric across scripts) was right, my guess
 at the sign was wrong.

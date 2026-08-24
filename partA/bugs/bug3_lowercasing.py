@@ -13,6 +13,11 @@ or whether it instead asymmetrically favors one side of the comparison.
 
 Uses `line.split()` and micro-averaging (bugs 1 & 2 fixed) so this isolates
 ONLY the lowercasing effect.
+
+Checked on both corpora: the original 10-line corpus_sample (Part 1) and
+the full FLORES-200 devtest corpus (Part 2), same reasoning as bug 2 --
+a BPE-merge effect like this is a statistical property that a 10-line
+sample may not show reliably, so Part 1 exists to check that directly.
 """
 
 import glob
@@ -39,18 +44,10 @@ def micro_fertility(lines, do_lower):
     return total_tokens / total_words
 
 
-def main():
-    here = os.path.dirname(__file__)
-    corpus_dir = os.path.join(here, "..", "corpus", "flores200")
-    files = sorted(glob.glob(os.path.join(corpus_dir, "*.txt")))
-    if not files:
-        print("(FLORES corpus not found -- run partA/corpus/build_corpus.py first)")
-        return
-
+def report(files_by_lang):
     print(f"{'lang':<6}{'fert (lowercased)':>20}{'fert (as-is)':>16}{'delta':>10}{'delta %':>10}")
     results = {}
-    for path in files:
-        lang = os.path.splitext(os.path.basename(path))[0]
+    for lang, path in files_by_lang.items():
         lines = read_lines(path)
         f_lower = micro_fertility(lines, True)
         f_raw = micro_fertility(lines, False)
@@ -59,15 +56,42 @@ def main():
         pct = 100 * delta / f_raw
         print(f"{lang:<6}{f_lower:>20.4f}{f_raw:>16.4f}{delta:>+10.4f}{pct:>+9.2f}%")
 
+    if "eng" in results and "hin" in results:
+        print()
+        eng_lower, eng_raw = results["eng"]
+        hin_lower, hin_raw = results["hin"]
+        ratio_lower = hin_lower / eng_lower
+        ratio_raw = hin_raw / eng_raw
+        print(f"hin/eng fertility ratio WITH lowercasing:    {ratio_lower:.3f}x")
+        print(f"hin/eng fertility ratio WITHOUT lowercasing: {ratio_raw:.3f}x")
+        print(f"How much of the reported multiplier is attributable to lowercasing: "
+              f"{ratio_lower - ratio_raw:+.3f}x ({100*(ratio_lower-ratio_raw)/ratio_raw:+.2f}%)")
+    return results
+
+
+def main():
+    here = os.path.dirname(__file__)
+
+    print("=" * 70)
+    print("PART 1: original corpus_sample (10 lines/lang, eng+hin only)")
+    print("=" * 70)
+    sample_files = {
+        "eng": os.path.join(here, "..", "original", "corpus_sample", "eng_sample.txt"),
+        "hin": os.path.join(here, "..", "original", "corpus_sample", "hin_sample.txt"),
+    }
+    report(sample_files)
+
     print()
-    eng_lower, eng_raw = results["eng"]
-    hin_lower, hin_raw = results["hin"]
-    ratio_lower = hin_lower / eng_lower
-    ratio_raw = hin_raw / eng_raw
-    print(f"hin/eng fertility ratio WITH lowercasing:    {ratio_lower:.3f}x")
-    print(f"hin/eng fertility ratio WITHOUT lowercasing: {ratio_raw:.3f}x")
-    print(f"How much of the reported multiplier is attributable to lowercasing: "
-          f"{ratio_lower - ratio_raw:+.3f}x ({100*(ratio_lower-ratio_raw)/ratio_raw:+.2f}%)")
+    print("=" * 70)
+    print("PART 2: FLORES-200 devtest corpus (A1, 1012 lines/lang)")
+    print("=" * 70)
+    corpus_dir = os.path.join(here, "..", "corpus", "flores200")
+    files = sorted(glob.glob(os.path.join(corpus_dir, "*.txt")))
+    if not files:
+        print("(FLORES corpus not found -- run partA/corpus/build_corpus.py first)")
+        return
+    flores_files = {os.path.splitext(os.path.basename(p))[0]: p for p in files}
+    report(flores_files)
 
 
 if __name__ == "__main__":

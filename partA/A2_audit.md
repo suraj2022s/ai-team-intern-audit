@@ -52,7 +52,15 @@ corpus."
 
 **Command**: `python partA/bugs/bug2_macro_vs_micro.py`
 
-**Before/after** (FLORES-200, all 6 languages, `split()`-fixed so this
+**Before/after, original corpus_sample** (10 lines/lang, eng+hin only —
+checked first on the corpus REPORT_v0 actually used, before scaling up):
+
+| lang | macro | micro | delta | delta % |
+|---|---|---|---|---|
+| eng | 1.2831 | 1.2692 | +0.0138 | +1.09% |
+| hin | 7.5985 | 7.5246 | +0.0739 | +0.98% |
+
+**Before/after, FLORES-200** (all 6 languages, `split()`-fixed so this
 isolates only the averaging method):
 
 | lang | macro (script's method) | micro (total/total) | delta | delta % |
@@ -66,10 +74,12 @@ isolates only the averaging method):
 
 **Why the delta proves the claim**: holding tokenizer, corpus, and word-split
 method fixed and changing only the averaging formula moves every language's
-number in the same direction (macro > micro), by ~0.5-0.9% — consistent
-with the mechanism (short lines get noisier per-line ratios and are
-over-weighted). Real, but small — not enough on its own to explain the
-report's ×5.89 headline.
+number in the same direction (macro > micro), by ~0.5-0.9% at FLORES scale
+(~1.0% on the tiny sample, same sign, slightly larger — consistent with a
+noisier estimate at n=10, not a different effect) — consistent with the
+mechanism (short lines get noisier per-line ratios and are over-weighted).
+Real, but small — not enough on its own to explain the report's ×5.89
+headline.
 
 ## 3. Conceptual — `.lower()` before encoding is not neutral across scripts
 
@@ -82,7 +92,16 @@ sides of the comparison it's meant to make fair.
 
 **Command**: `python partA/bugs/bug3_lowercasing.py`
 
-**Before/after** (FLORES-200, micro-averaged, `split()`-fixed):
+**Before/after, original corpus_sample** (10 lines/lang, eng+hin only):
+
+| lang | fertility (lowercased) | fertility (as-is) | delta | delta % |
+|---|---|---|---|---|
+| eng | 1.2692 | 1.2308 | +0.0385 | +3.12% |
+| hin | 7.5246 | 7.5246 | +0.0000 | +0.00% |
+
+hin/eng ratio with lowercasing: **5.928x**. Without: **6.114x** (−3.03%).
+
+**Before/after, FLORES-200** (micro-averaged, `split()`-fixed):
 
 | lang | fertility (lowercased) | fertility (as-is) | delta | delta % |
 |---|---|---|---|---|
@@ -93,14 +112,18 @@ sides of the comparison it's meant to make fair.
 | tam | 25.0492 | 25.0478 | +0.0014 | +0.01% |
 | tel | 20.7145 | 20.7086 | +0.0059 | +0.03% |
 
-hin/eng ratio with lowercasing: **6.116x**. Without: **6.331x**.
+hin/eng ratio with lowercasing: **6.116x**. Without: **6.331x** (−3.39%).
 
 **Why the delta proves the claim**: the five case-less scripts move by
 ≤0.03% (noise) while English alone moves 3.51% — an asymmetry that can only
 come from `.lower()` interacting with GPT-2's case-sensitive vocabulary,
-since nothing else differs between the two runs. Note the direction: contrary
-to my first guess (see NOTEBOOK.md), lowercasing *shrinks* the reported
-hin/eng multiplier by ~3.4%, it doesn't inflate it — the report's ×5.89 is
+since nothing else differs between the two runs. The 10-line sample shows
+the same asymmetry almost exactly (eng +3.12%, hin +0.00%, ratio shrinks
+−3.03%) — this mechanism doesn't need FLORES scale to show up, unlike bug 2,
+because it's a deterministic property of specific words hitting specific
+BPE merges, not a statistical average. Note the direction either way:
+contrary to my first guess (see NOTEBOOK.md), lowercasing *shrinks* the
+reported hin/eng multiplier, it doesn't inflate it — the report's ×5.89 is
 mildly conservative because of this bug, not exaggerated by it. Direction
 matters and isn't guessable without measuring it.
 
