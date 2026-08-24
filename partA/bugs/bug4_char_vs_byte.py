@@ -74,6 +74,10 @@ def report(label, files_by_lang):
 
 def main():
     here = os.path.dirname(__file__)
+    print("FORMULA:")
+    print("  tok/char (bug, fertility.py) = tokens / len(line)                  -- Unicode codepoints")
+    print("  tok/byte (fix)               = tokens / len(line.encode('utf-8'))  -- actual bytes")
+    print()
 
     orig_dir = os.path.join(here, "..", "original", "corpus_sample")
     orig_files = {

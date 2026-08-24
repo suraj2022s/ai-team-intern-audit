@@ -1,3 +1,7 @@
+FORMULA: fertility = tokens / words
+  bug (fertility.py):  words = line.split(" ")   -- literal single space
+  fix:                 words = line.split()      -- any whitespace run
+
 ======================================================================
 PART 1: exact lines that trigger the bug (original sample corpus)
 ======================================================================

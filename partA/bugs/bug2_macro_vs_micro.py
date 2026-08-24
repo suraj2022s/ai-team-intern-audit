@@ -56,7 +56,10 @@ def report(files_by_lang):
 
 def main():
     here = os.path.dirname(__file__)
-
+    print("FORMULA:")
+    print("  macro (fertility.py's method) = mean(tokens_i / words_i)  -- average of PER-LINE ratios")
+    print("  micro (the fix)               = sum(tokens) / sum(words)  -- ratio of the TOTALS")
+    print()
     print("=" * 70)
     print("PART 1: original corpus_sample (10 lines/lang, eng+hin only)")
     print("=" * 70)

@@ -1,3 +1,7 @@
+FORMULA:
+  tok/char (bug, fertility.py) = tokens / len(line)                  -- Unicode codepoints
+  tok/byte (fix)               = tokens / len(line.encode('utf-8'))  -- actual bytes
+
 -- REPORT_v0's exact corpus_sample (10 lines/lang) --
 lang    tok/char (len)   tok/byte (utf8)  avg bytes/char
 eng              0.226             0.226           1.000

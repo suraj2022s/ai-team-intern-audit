@@ -39,6 +39,10 @@ def read_lines(path):
 
 def main():
     here = os.path.dirname(__file__)
+    print("FORMULA: fertility = tokens / words")
+    print('  bug (fertility.py):  words = line.split(" ")   -- literal single space')
+    print("  fix:                 words = line.split()      -- any whitespace run")
+    print()
     print("=" * 70)
     print("PART 1: exact lines that trigger the bug (original sample corpus)")
     print("=" * 70)

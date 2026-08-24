@@ -1,4 +1,9 @@
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+FORMULA (4 denominators, same tokens numerator each time):
+  tok_per_word     = total_tokens / total_words             (words = str.split())
+  tok_per_byte     = total_tokens / total_bytes             (bytes = s.encode('utf-8'))
+  tok_per_grapheme = total_tokens / total_grapheme_clusters (via regex r'\X')
+  tok_per_sentence = total_tokens / num_parallel_sentences
+
 Loading tokenizers (gpt2, MuRIL, NLLB-200)...
 
 Encoding with gpt2...
@@ -25,7 +30,7 @@ Encoding with nllb-200-distilled-600M...
   tam: tok/word=2.587  tok/byte=0.1029  tok/grapheme=0.435  tok/sentence=42.88
   tel: tok/word=2.400  tok/byte=0.1149  tok/grapheme=0.531  tok/sentence=40.17
 
-Wrote C:\Users\USER\Downloads\falm ai\your-submission\partA\results\a3_full_table.csv
+Wrote C:\Users\USER\Downloads\falm ai\your-submission1\partA\results\a3_full_table.csv
 
 ==============================================================================
 SUMMARY: ratio to eng, per tokenizer x denominator

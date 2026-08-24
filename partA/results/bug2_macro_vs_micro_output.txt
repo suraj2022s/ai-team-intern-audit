@@ -1,3 +1,7 @@
+FORMULA:
+  macro (fertility.py's method) = mean(tokens_i / words_i)  -- average of PER-LINE ratios
+  micro (the fix)               = sum(tokens) / sum(words)  -- ratio of the TOTALS
+
 ======================================================================
 PART 1: original corpus_sample (10 lines/lang, eng+hin only)
 ======================================================================

@@ -71,7 +71,9 @@ def report(files_by_lang):
 
 def main():
     here = os.path.dirname(__file__)
-
+    print("FORMULA: fertility = tokens / words  (micro-averaged, split()-fixed)")
+    print("  computed on line.lower() vs. line as-is -- only the .lower() step changes")
+    print()
     print("=" * 70)
     print("PART 1: original corpus_sample (10 lines/lang, eng+hin only)")
     print("=" * 70)

@@ -1,3 +1,6 @@
+FORMULA: fertility = tokens / words  (micro-averaged, split()-fixed)
+  computed on line.lower() vs. line as-is -- only the .lower() step changes
+
 ======================================================================
 PART 1: original corpus_sample (10 lines/lang, eng+hin only)
 ======================================================================

@@ -1,3 +1,7 @@
+FORMULA:
+  tokens/word     = total_tokens / total_words
+  tokens/sentence = total_tokens / num_parallel_sentences
+
 Step 1: does whitespace word-count stay constant across a parallel corpus
 (same meaning, same sentence, different language)?
 

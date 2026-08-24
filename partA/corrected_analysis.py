@@ -70,6 +70,12 @@ def main():
     n_sentences = len(next(iter(langs.values())))
     assert all(len(v) == n_sentences for v in langs.values()), "corpora not parallel!"
 
+    print("FORMULA (4 denominators, same tokens numerator each time):")
+    print("  tok_per_word     = total_tokens / total_words             (words = str.split())")
+    print("  tok_per_byte     = total_tokens / total_bytes             (bytes = s.encode('utf-8'))")
+    print("  tok_per_grapheme = total_tokens / total_grapheme_clusters (via regex r'\\X')")
+    print("  tok_per_sentence = total_tokens / num_parallel_sentences")
+    print()
     print("Loading tokenizers (gpt2, MuRIL, NLLB-200)...")
     tokenizers = load_tokenizers()
 

@@ -36,6 +36,10 @@ def main():
         print("(FLORES corpus not found -- run partA/corpus/build_corpus.py first)")
         return
 
+    print("FORMULA:")
+    print("  tokens/word     = total_tokens / total_words")
+    print("  tokens/sentence = total_tokens / num_parallel_sentences")
+    print()
     print("Step 1: does whitespace word-count stay constant across a parallel corpus")
     print("(same meaning, same sentence, different language)?\n")
     print(f"{'lang':<6}{'sentences':>10}{'total words':>13}{'avg words/sent':>16}")
