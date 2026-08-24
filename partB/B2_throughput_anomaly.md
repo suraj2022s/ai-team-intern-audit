@@ -65,9 +65,14 @@ capacity-planning conversation than "accept everything and let the
 scheduler silently degrade."
 
 (A second-order option worth flagging for capacity growth rather than just
-avoiding the cliff: fp8 KV-cache quantization would roughly halve
-bytes/token (B1's 114,688 B/token → ~57,344 B/token), which by the same B1
-formula would roughly double the concurrent-sequence ceiling to ~51 — i.e.
-raise the cliff instead of just staying under it. That's a larger change
-with its own accuracy tradeoffs, so the admission-cap fix is the one I'd
-predict quantitatively and recommend first.)
+avoiding the cliff: fp8 KV-cache quantization would halve bytes/token
+(B1's 114,688 B/token → 57,344 B/token), which by the same B1 formula
+raises the concurrent-sequence ceiling to **~51 (exactly 2.00x)** — i.e.
+raise the cliff instead of just staying under it. This is now the `(b-fp8)`
+block in `partB/b1_kv_cache_capacity.py` / `b1_output.txt`, computed by the
+script rather than asserted here, after an earlier pass found a different
+hand-typed B1 number (the weights-omitted scenario) that turned out to be
+wrong — same fix applied preemptively to this one. That's a larger change
+with its own accuracy tradeoffs (fp8 KV cache trades off numerical
+precision, not just memory), so the admission-cap fix is still the one I'd
+recommend first — this is flagged as the next lever, not a replacement.)

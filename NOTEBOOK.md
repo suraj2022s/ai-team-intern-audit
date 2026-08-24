@@ -333,6 +333,16 @@ the two methods *agreeing* at batch=24 (no preemption) and *diverging
 sharply* at batch=48 (heavy preemption) is itself corroborating evidence for
 the B2 mechanism — worth mentioning in B2's writeup, not just B3's.
 
+**Follow-up after the B1 correction above**: B2's writeup has its own
+hand-typed aside (the fp8 KV-cache quantization parenthetical) that was
+never run through the script either — same exposure as the weights bug,
+just not yet wrong. Checked it by hand: 114,688/2=57,344 B/token, ceiling
+12.08e9/(57,344×4096)=51.43 → matches the "~51" already written. Correct
+this time, but added a `(b-fp8)` block to `b1_kv_cache_capacity.py` anyway
+so it's verified by the script instead of resting on a hand-check that
+happened to be right — no reason to leave a second unguarded assertion
+sitting next to the one that just turned out wrong.
+
 ## B2 — throughput anomaly writeup
 
 Wrote `partB/B2_throughput_anomaly.md` directly from the log (no new script

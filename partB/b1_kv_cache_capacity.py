@@ -85,6 +85,13 @@ def main():
     print(f"    naive max_seqs = {naive_usable_kv_mem/GB:.3f}e9 / ({kv_bpt} x {MAX_MODEL_LEN}) = {naive_max_seqs:.2f} -> ~{int(naive_max_seqs)} sequences")
     print(f"    overstatement vs the correct {max_seqs:.2f}: +{overstatement_pct:.1f}%")
 
+    print("\n(b-fp8) What if the KV cache itself were fp8 instead of fp16?")
+    fp8_kv_bpt = kv_bpt // 2  # 1 byte/param instead of 2 -- weights untouched, only the KV cache quantizes
+    fp8_max_seqs = usable_kv_mem / (fp8_kv_bpt * MAX_MODEL_LEN)
+    print(f"    fp8 KV bytes/token = {kv_bpt} / 2 = {fp8_kv_bpt:,}")
+    print(f"    fp8 max_seqs = {usable_kv_mem/GB:.3f}e9 / ({fp8_kv_bpt} x {MAX_MODEL_LEN}) = {fp8_max_seqs:.2f} -> ~{int(fp8_max_seqs)} sequences")
+    print(f"    ratio vs fp16 ceiling ({max_seqs:.2f}): {fp8_max_seqs/max_seqs:.2f}x")
+
     print(f"\n    Predicted ceiling: ~{int(max_seqs)} concurrent 4096-token sequences.")
     print(f"    In the log, rows with prompt_len=3584 + gen_len=512 = 4096 total context:")
     print(f"      batch=24: preempted_seqs=0, kv_cache_util=0.93  (fits cleanly)")
