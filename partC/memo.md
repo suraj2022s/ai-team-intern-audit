@@ -1,10 +1,6 @@
 # Part C — Decision memo: casual/conversational tone in Hindi, Kannada, Tamil, Telugu, Bengali, Marathi
 
-**Recommendation: (b) a small (≤1B) inference-time rewriter**, trained via
-self-distillation on the A100 (no external API needed), with **(c)
-prompt-engineering shipped immediately as a day-1/day-2 stopgap** while (b)
-trains — not a hedge between two paths, but a staged rollout with an
-explicit kill criterion that falls back to (c) alone if (b) underperforms.
+I recommend Option B. We will build a small, secondary "rewriter" AI (less than 1 billion parameters) to sit between our main AI and the user. Because we aren't allowed to pay external companies like OpenAI for training data, we will force our own main AI to generate the training data for this small model ("self-distillation"). While we spend a few weeks building this, we will immediately launch Option C (Prompting) as a temporary band-aid so the product team gets immediate results.
 
 ## Assumptions
 
