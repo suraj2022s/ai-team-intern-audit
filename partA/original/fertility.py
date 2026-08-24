@@ -22,7 +22,7 @@ import random
 import sys
 import unicodedata
 
-random.seed(1337)  # reproducibility
+random.seed(1337)  # reproducibility error
 
 
 def load_tokenizer(spec: str):
@@ -57,14 +57,14 @@ def analyze(lines, encode):
     per_line_tpc = []
     for line in lines:
         # lowercase so casing doesn't add noise to the comparison
-        line = line.lower()
-        tokens = encode(line)
-        words = line.split(" ")
+        line = line.lower()  # lowercase error
+        tokens = encode(line) # bytes vs token error
+        words = line.split(" ") # double space error
         chars = len(line)
         per_line_fertility.append(len(tokens) / len(words))
         per_line_tpc.append(len(tokens) / chars)
     n = len(per_line_fertility)
-    return sum(per_line_fertility) / n, sum(per_line_tpc) / n
+    return sum(per_line_fertility) / n, sum(per_line_tpc) / n  # macro error
 
 
 def main():
