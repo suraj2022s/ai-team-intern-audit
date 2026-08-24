@@ -30,6 +30,11 @@
         32        3584      512      4096               7           0.97
         48        3584      512      4096              23           0.97
 
+(b-naive) What if you forgot to subtract model weights?
+    naive usable KV memory = 22.080 - 1.600 (overhead only) = 20.480 GB
+    naive max_seqs = 20.480e9 / (114688 x 4096) = 43.60 -> ~43 sequences
+    overstatement vs the correct 25.72: +69.5%
+
     Predicted ceiling: ~25 concurrent 4096-token sequences.
     In the log, rows with prompt_len=3584 + gen_len=512 = 4096 total context:
       batch=24: preempted_seqs=0, kv_cache_util=0.93  (fits cleanly)

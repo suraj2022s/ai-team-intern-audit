@@ -261,8 +261,30 @@ Arithmetic: 2(K,V) x 28 layers x 8 KV-heads x 128 head_dim x 2 bytes(fp16)
 bytes = 8.4GB) − overhead(1.6GB) = 12.08GB. Deliberately included model
 weights in the subtraction even though model_spec.md's overhead line doesn't
 explicitly call them out — they obviously occupy GPU memory, and skipping
-them would overstate capacity by >2x. Predicted ceiling: ~25.7 concurrent
+them would overstate capacity by ~70% (20.48GB usable instead of 12.08GB,
+~43 sequences instead of ~25.7). Predicted ceiling: ~25.7 concurrent
 4096-token sequences.
+
+**Correction, caught later**: an earlier draft of this note (and of
+B1_answer.md) claimed omitting weights would predict "~59 sequences" and
+"overstate by ~230%" — an arithmetic error that was hand-typed prose,
+never actually computed by `b1_kv_cache_capacity.py`. That's exactly how
+it survived two later review passes untouched: nobody re-derived it,
+including me, and the script never printed it either, so there was nothing
+to check it against. Caught when an independent naive-calculation
+walkthrough (not run by me) landed on 43.6, not 59, and didn't match what
+was written here.
+
+Fixed at the root instead of just patching the prose: added a `(b-naive)`
+block to `b1_kv_cache_capacity.py` that actually computes the
+weights-omitted scenario — `22.08GB − 1.6GB(overhead only) = 20.48GB`,
+`20.48e9/(114,688×4096) = 43.60 → ~43 sequences`, `+69.5%` overstatement
+vs. the correct 25.72. Re-ran the script, saved the new `b1_output.txt`,
+and updated `B1_answer.md`'s prose to match the script's own output exactly
+instead of restating a hand-computed number. The number nobody re-derives
+— including your own past numbers — is precisely the one that can sit
+wrong in a document indefinitely; the fix is making it a printed output,
+not a corrected sentence.
 
 Checked against the log two ways: (1) bracket check — 25.7 falls exactly
 between batch=24 (clean, 0 preemptions) and batch=32 (7 preemptions) at

@@ -30,9 +30,12 @@ max concurrent 4096-token sequences = 12.080e9 / (114,688 bytes/token x 4096 tok
 (1.6 GB, "activations, CUDA graphs, etc.") does not mention the model
 weights themselves — but weights obviously sit in GPU memory too (8.4 GB
 for a 4.2B-param fp16 model, larger than the overhead line and larger than
-the entire non-weight budget). Omitting them would have overstated capacity
-by ~230% (would predict ~59 sequences instead of ~25). Including them is
-the correct reading of "how much memory is actually left for KV cache."
+the entire non-weight budget). Omitting them (usable memory would be
+22.08 − 1.6 = 20.48 GB instead of 12.08 GB) would have overstated capacity
+by **+69.5%** (would predict ~43 sequences instead of ~25 — see the
+`(b-naive)` block in `b1_output.txt`, computed by the script itself rather
+than asserted by hand). Including them is the correct reading of "how much
+memory is actually left for KV cache."
 
 **Unit convention**: GB = 1e9 bytes throughout (decimal, matching how GPU
 vendors quote card memory), not GiB = 1024³ bytes. Using GiB instead would

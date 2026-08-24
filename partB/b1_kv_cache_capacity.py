@@ -77,6 +77,14 @@ def main():
         print(f"    {r['batch_size']:>6}{r['prompt_len']:>12}{r['gen_len']:>9}{total_ctx:>10}"
               f"{r['preempted_seqs']:>16}{r['kv_cache_util']:>15}")
 
+    print("\n(b-naive) What if you forgot to subtract model weights?")
+    naive_usable_kv_mem = total_mem - overhead_mem
+    naive_max_seqs = naive_usable_kv_mem / (kv_bpt * MAX_MODEL_LEN)
+    overstatement_pct = (naive_max_seqs - max_seqs) / max_seqs * 100
+    print(f"    naive usable KV memory = {total_mem/GB:.3f} - {overhead_mem/GB:.3f} (overhead only) = {naive_usable_kv_mem/GB:.3f} GB")
+    print(f"    naive max_seqs = {naive_usable_kv_mem/GB:.3f}e9 / ({kv_bpt} x {MAX_MODEL_LEN}) = {naive_max_seqs:.2f} -> ~{int(naive_max_seqs)} sequences")
+    print(f"    overstatement vs the correct {max_seqs:.2f}: +{overstatement_pct:.1f}%")
+
     print(f"\n    Predicted ceiling: ~{int(max_seqs)} concurrent 4096-token sequences.")
     print(f"    In the log, rows with prompt_len=3584 + gen_len=512 = 4096 total context:")
     print(f"      batch=24: preempted_seqs=0, kv_cache_util=0.93  (fits cleanly)")
